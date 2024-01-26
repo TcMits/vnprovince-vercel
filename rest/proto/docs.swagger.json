@@ -67,6 +67,148 @@
         ]
       }
     },
+    "/api/provinces": {
+      "get": {
+        "operationId": "VNProvinceService_ListProvinces",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoListProvincesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page_token",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter",
+            "description": "syntax: https://google.aip.dev/160\nsupport identities:\n- province_code\n- province_name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "VNProvinceService"
+        ]
+      }
+    },
+    "/api/{district_name}": {
+      "get": {
+        "operationId": "VNProvinceService_GetDistrict",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoDistrict"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "district_name",
+            "description": "Format: provinces/{province_id}/districts/{district_id}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "provinces/[^/]+/districts/[^/]+"
+          }
+        ],
+        "tags": [
+          "VNProvinceService"
+        ]
+      }
+    },
+    "/api/{district_name}/wards": {
+      "get": {
+        "operationId": "VNProvinceService_ListWards",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoListWardsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "district_name",
+            "description": "Format: provinces/{province_id}/districts/{district_id}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "provinces/[^/]+/districts/[^/]+"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page_token",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter",
+            "description": "syntax: https://google.aip.dev/160\nsupport identities:\n- ward_code\n- ward_name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "VNProvinceService"
+        ]
+      }
+    },
     "/api/{division_name}": {
       "get": {
         "operationId": "VNProvinceService_GetDivision",
@@ -98,9 +240,157 @@
           "VNProvinceService"
         ]
       }
+    },
+    "/api/{province_name}": {
+      "get": {
+        "operationId": "VNProvinceService_GetProvince",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoProvince"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "province_name",
+            "description": "Format: provinces/{province_id}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "provinces/[^/]+"
+          }
+        ],
+        "tags": [
+          "VNProvinceService"
+        ]
+      }
+    },
+    "/api/{province_name}/districts": {
+      "get": {
+        "operationId": "VNProvinceService_ListDistricts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoListDistrictsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "province_name",
+            "description": "Format: provinces/{province_id}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "provinces/[^/]+"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page_token",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter",
+            "description": "syntax: https://google.aip.dev/160\nsupport identities:\n- district_code\n- district_name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "VNProvinceService"
+        ]
+      }
+    },
+    "/api/{ward_name}": {
+      "get": {
+        "operationId": "VNProvinceService_GetWard",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/protoWard"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "ward_name",
+            "description": "Format: provinces/{province_id}/districts/{district_id}/wards/{ward_id}",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "pattern": "provinces/[^/]+/districts/[^/]+/wards/[^/]+"
+          }
+        ],
+        "tags": [
+          "VNProvinceService"
+        ]
+      }
     }
   },
   "definitions": {
+    "protoDistrict": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Format: provinces/{province_id}/districts/{district_id}"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "district_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "district_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "district_code",
+        "district_name"
+      ]
+    },
     "protoDivision": {
       "type": "object",
       "properties": {
@@ -142,6 +432,21 @@
         "district_name"
       ]
     },
+    "protoListDistrictsResponse": {
+      "type": "object",
+      "properties": {
+        "districts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protoDistrict"
+          }
+        },
+        "next_page_token": {
+          "type": "string"
+        }
+      }
+    },
     "protoListDivisionsResponse": {
       "type": "object",
       "properties": {
@@ -156,6 +461,86 @@
           "type": "string"
         }
       }
+    },
+    "protoListProvincesResponse": {
+      "type": "object",
+      "properties": {
+        "provinces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protoProvince"
+          }
+        },
+        "next_page_token": {
+          "type": "string"
+        }
+      }
+    },
+    "protoListWardsResponse": {
+      "type": "object",
+      "properties": {
+        "wards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protoWard"
+          }
+        },
+        "next_page_token": {
+          "type": "string"
+        }
+      }
+    },
+    "protoProvince": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Format: provinces/{province_id}"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "province_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "province_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "province_code",
+        "province_name"
+      ]
+    },
+    "protoWard": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Format: provinces/{province_id}/districts/{district_id}/wards/{ward_id}"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ward_code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "ward_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "ward_code",
+        "ward_name"
+      ]
     },
     "protobufAny": {
       "type": "object",

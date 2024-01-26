@@ -24,6 +24,12 @@ const _ = grpc.SupportPackageIsVersion7
 type VNProvinceServiceClient interface {
 	ListDivisions(ctx context.Context, in *ListDivisionsRequest, opts ...grpc.CallOption) (*ListDivisionsResponse, error)
 	GetDivision(ctx context.Context, in *GetDivisionRequest, opts ...grpc.CallOption) (*Division, error)
+	ListProvinces(ctx context.Context, in *ListProvincesRequest, opts ...grpc.CallOption) (*ListProvincesResponse, error)
+	GetProvince(ctx context.Context, in *GetProvinceRequest, opts ...grpc.CallOption) (*Province, error)
+	ListDistricts(ctx context.Context, in *ListDistrictsRequest, opts ...grpc.CallOption) (*ListDistrictsResponse, error)
+	GetDistrict(ctx context.Context, in *GetDistrictRequest, opts ...grpc.CallOption) (*District, error)
+	ListWards(ctx context.Context, in *ListWardsRequest, opts ...grpc.CallOption) (*ListWardsResponse, error)
+	GetWard(ctx context.Context, in *GetWardRequest, opts ...grpc.CallOption) (*Ward, error)
 }
 
 type vNProvinceServiceClient struct {
@@ -52,12 +58,72 @@ func (c *vNProvinceServiceClient) GetDivision(ctx context.Context, in *GetDivisi
 	return out, nil
 }
 
+func (c *vNProvinceServiceClient) ListProvinces(ctx context.Context, in *ListProvincesRequest, opts ...grpc.CallOption) (*ListProvincesResponse, error) {
+	out := new(ListProvincesResponse)
+	err := c.cc.Invoke(ctx, "/api.proto.VNProvinceService/ListProvinces", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vNProvinceServiceClient) GetProvince(ctx context.Context, in *GetProvinceRequest, opts ...grpc.CallOption) (*Province, error) {
+	out := new(Province)
+	err := c.cc.Invoke(ctx, "/api.proto.VNProvinceService/GetProvince", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vNProvinceServiceClient) ListDistricts(ctx context.Context, in *ListDistrictsRequest, opts ...grpc.CallOption) (*ListDistrictsResponse, error) {
+	out := new(ListDistrictsResponse)
+	err := c.cc.Invoke(ctx, "/api.proto.VNProvinceService/ListDistricts", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vNProvinceServiceClient) GetDistrict(ctx context.Context, in *GetDistrictRequest, opts ...grpc.CallOption) (*District, error) {
+	out := new(District)
+	err := c.cc.Invoke(ctx, "/api.proto.VNProvinceService/GetDistrict", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vNProvinceServiceClient) ListWards(ctx context.Context, in *ListWardsRequest, opts ...grpc.CallOption) (*ListWardsResponse, error) {
+	out := new(ListWardsResponse)
+	err := c.cc.Invoke(ctx, "/api.proto.VNProvinceService/ListWards", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vNProvinceServiceClient) GetWard(ctx context.Context, in *GetWardRequest, opts ...grpc.CallOption) (*Ward, error) {
+	out := new(Ward)
+	err := c.cc.Invoke(ctx, "/api.proto.VNProvinceService/GetWard", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VNProvinceServiceServer is the server API for VNProvinceService service.
 // All implementations must embed UnimplementedVNProvinceServiceServer
 // for forward compatibility
 type VNProvinceServiceServer interface {
 	ListDivisions(context.Context, *ListDivisionsRequest) (*ListDivisionsResponse, error)
 	GetDivision(context.Context, *GetDivisionRequest) (*Division, error)
+	ListProvinces(context.Context, *ListProvincesRequest) (*ListProvincesResponse, error)
+	GetProvince(context.Context, *GetProvinceRequest) (*Province, error)
+	ListDistricts(context.Context, *ListDistrictsRequest) (*ListDistrictsResponse, error)
+	GetDistrict(context.Context, *GetDistrictRequest) (*District, error)
+	ListWards(context.Context, *ListWardsRequest) (*ListWardsResponse, error)
+	GetWard(context.Context, *GetWardRequest) (*Ward, error)
 	mustEmbedUnimplementedVNProvinceServiceServer()
 }
 
@@ -70,6 +136,24 @@ func (UnimplementedVNProvinceServiceServer) ListDivisions(context.Context, *List
 }
 func (UnimplementedVNProvinceServiceServer) GetDivision(context.Context, *GetDivisionRequest) (*Division, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDivision not implemented")
+}
+func (UnimplementedVNProvinceServiceServer) ListProvinces(context.Context, *ListProvincesRequest) (*ListProvincesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListProvinces not implemented")
+}
+func (UnimplementedVNProvinceServiceServer) GetProvince(context.Context, *GetProvinceRequest) (*Province, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProvince not implemented")
+}
+func (UnimplementedVNProvinceServiceServer) ListDistricts(context.Context, *ListDistrictsRequest) (*ListDistrictsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDistricts not implemented")
+}
+func (UnimplementedVNProvinceServiceServer) GetDistrict(context.Context, *GetDistrictRequest) (*District, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDistrict not implemented")
+}
+func (UnimplementedVNProvinceServiceServer) ListWards(context.Context, *ListWardsRequest) (*ListWardsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListWards not implemented")
+}
+func (UnimplementedVNProvinceServiceServer) GetWard(context.Context, *GetWardRequest) (*Ward, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetWard not implemented")
 }
 func (UnimplementedVNProvinceServiceServer) mustEmbedUnimplementedVNProvinceServiceServer() {}
 
@@ -120,6 +204,114 @@ func _VNProvinceService_GetDivision_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VNProvinceService_ListProvinces_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProvincesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VNProvinceServiceServer).ListProvinces(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.proto.VNProvinceService/ListProvinces",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VNProvinceServiceServer).ListProvinces(ctx, req.(*ListProvincesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VNProvinceService_GetProvince_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProvinceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VNProvinceServiceServer).GetProvince(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.proto.VNProvinceService/GetProvince",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VNProvinceServiceServer).GetProvince(ctx, req.(*GetProvinceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VNProvinceService_ListDistricts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDistrictsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VNProvinceServiceServer).ListDistricts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.proto.VNProvinceService/ListDistricts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VNProvinceServiceServer).ListDistricts(ctx, req.(*ListDistrictsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VNProvinceService_GetDistrict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDistrictRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VNProvinceServiceServer).GetDistrict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.proto.VNProvinceService/GetDistrict",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VNProvinceServiceServer).GetDistrict(ctx, req.(*GetDistrictRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VNProvinceService_ListWards_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListWardsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VNProvinceServiceServer).ListWards(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.proto.VNProvinceService/ListWards",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VNProvinceServiceServer).ListWards(ctx, req.(*ListWardsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VNProvinceService_GetWard_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWardRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VNProvinceServiceServer).GetWard(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.proto.VNProvinceService/GetWard",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VNProvinceServiceServer).GetWard(ctx, req.(*GetWardRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VNProvinceService_ServiceDesc is the grpc.ServiceDesc for VNProvinceService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +326,30 @@ var VNProvinceService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDivision",
 			Handler:    _VNProvinceService_GetDivision_Handler,
+		},
+		{
+			MethodName: "ListProvinces",
+			Handler:    _VNProvinceService_ListProvinces_Handler,
+		},
+		{
+			MethodName: "GetProvince",
+			Handler:    _VNProvinceService_GetProvince_Handler,
+		},
+		{
+			MethodName: "ListDistricts",
+			Handler:    _VNProvinceService_ListDistricts_Handler,
+		},
+		{
+			MethodName: "GetDistrict",
+			Handler:    _VNProvinceService_GetDistrict_Handler,
+		},
+		{
+			MethodName: "ListWards",
+			Handler:    _VNProvinceService_ListWards_Handler,
+		},
+		{
+			MethodName: "GetWard",
+			Handler:    _VNProvinceService_GetWard_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

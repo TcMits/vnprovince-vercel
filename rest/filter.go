@@ -5,7 +5,61 @@ import (
 
 	"github.com/TcMits/aipstr"
 	"github.com/TcMits/vnprovince"
+	"github.com/alecthomas/participle/v2"
 )
+
+var basicOperators = []*aipstr.DeclarationOperatorFunc[selector]{
+	aipstr.NewOperatorFunc(
+		aipstr.EqOp,
+		aipstr.WithFieldWithValueInt(eqFieldWithInt),
+		aipstr.WithFieldWithValueString(eqFieldWithString),
+	),
+	aipstr.NewOperatorFunc(
+		aipstr.LtOp,
+		aipstr.WithFieldWithValueInt(ltFieldWithInt),
+		aipstr.WithFieldWithValueString(ltFieldWithString),
+	),
+	aipstr.NewOperatorFunc(
+		aipstr.GtOp,
+		aipstr.WithFieldWithValueInt(gtFieldWithInt),
+		aipstr.WithFieldWithValueString(gtFieldWithString),
+	),
+	aipstr.NewOperatorFunc(
+		aipstr.LeOp,
+		aipstr.WithFieldWithValueInt(lteFieldWithInt),
+		aipstr.WithFieldWithValueString(lteFieldWithString),
+	),
+	aipstr.NewOperatorFunc(
+		aipstr.GeOp,
+		aipstr.WithFieldWithValueInt(gteFieldWithInt),
+		aipstr.WithFieldWithValueString(gteFieldWithString),
+	),
+	aipstr.NewOperatorFunc(
+		aipstr.NeOp,
+		aipstr.WithFieldWithValueInt(neFieldWithInt),
+		aipstr.WithFieldWithValueString(neFieldWithString),
+	),
+	aipstr.NewOperatorFunc(
+		aipstr.HasOp,
+		aipstr.WithFieldWithValueString(hasFieldWithString),
+	),
+	aipstr.NewOperatorFunc(
+		aipstr.AndOp,
+		aipstr.WithCombineNoErr(andSelector),
+	),
+	aipstr.NewOperatorFunc(
+		aipstr.OrOp,
+		aipstr.WithCombineNoErr(orSelector),
+	),
+	aipstr.NewOperatorFunc(
+		aipstr.TrueOp,
+		aipstr.WithNoField(func() selector { return trueSelector }),
+	),
+	aipstr.NewOperatorFunc(
+		aipstr.FalseOp,
+		aipstr.WithNoField(func() selector { return falseSelector }),
+	),
+}
 
 type selector func(d *vnprovince.Division) bool
 
@@ -44,8 +98,6 @@ func falseSelector(d *vnprovince.Division) bool {
 func eqFieldWithInt(field string, value int64) (selector, error) {
 	return func(d *vnprovince.Division) bool {
 		switch field {
-		case "id":
-			return getIDFromDivision(d) == value
 		case "province_code":
 			return d.ProvinceCode == value
 		case "district_code":
@@ -61,8 +113,6 @@ func eqFieldWithInt(field string, value int64) (selector, error) {
 func ltFieldWithInt(field string, value int64) (selector, error) {
 	return func(d *vnprovince.Division) bool {
 		switch field {
-		case "id":
-			return getIDFromDivision(d) < value
 		case "province_code":
 			return d.ProvinceCode < value
 		case "district_code":
@@ -78,8 +128,6 @@ func ltFieldWithInt(field string, value int64) (selector, error) {
 func gtFieldWithInt(field string, value int64) (selector, error) {
 	return func(d *vnprovince.Division) bool {
 		switch field {
-		case "id":
-			return getIDFromDivision(d) > value
 		case "province_code":
 			return d.ProvinceCode > value
 		case "district_code":
@@ -95,8 +143,6 @@ func gtFieldWithInt(field string, value int64) (selector, error) {
 func lteFieldWithInt(field string, value int64) (selector, error) {
 	return func(d *vnprovince.Division) bool {
 		switch field {
-		case "id":
-			return getIDFromDivision(d) <= value
 		case "province_code":
 			return d.ProvinceCode <= value
 		case "district_code":
@@ -112,8 +158,6 @@ func lteFieldWithInt(field string, value int64) (selector, error) {
 func gteFieldWithInt(field string, value int64) (selector, error) {
 	return func(d *vnprovince.Division) bool {
 		switch field {
-		case "id":
-			return getIDFromDivision(d) >= value
 		case "province_code":
 			return d.ProvinceCode >= value
 		case "district_code":
@@ -129,8 +173,6 @@ func gteFieldWithInt(field string, value int64) (selector, error) {
 func neFieldWithInt(field string, value int64) (selector, error) {
 	return func(d *vnprovince.Division) bool {
 		switch field {
-		case "id":
-			return getIDFromDivision(d) != value
 		case "province_code":
 			return d.ProvinceCode != value
 		case "district_code":
@@ -258,64 +300,12 @@ func hasFieldWithString(field string, value string) (selector, error) {
 }
 
 func getBasicOperator() []*aipstr.DeclarationOperatorFunc[selector] {
-	return []*aipstr.DeclarationOperatorFunc[selector]{
-		aipstr.NewOperatorFunc(
-			aipstr.EqOp,
-			aipstr.WithFieldWithValueInt(eqFieldWithInt),
-			aipstr.WithFieldWithValueString(eqFieldWithString),
-		),
-		aipstr.NewOperatorFunc(
-			aipstr.LtOp,
-			aipstr.WithFieldWithValueInt(ltFieldWithInt),
-			aipstr.WithFieldWithValueString(ltFieldWithString),
-		),
-		aipstr.NewOperatorFunc(
-			aipstr.GtOp,
-			aipstr.WithFieldWithValueInt(gtFieldWithInt),
-			aipstr.WithFieldWithValueString(gtFieldWithString),
-		),
-		aipstr.NewOperatorFunc(
-			aipstr.LeOp,
-			aipstr.WithFieldWithValueInt(lteFieldWithInt),
-			aipstr.WithFieldWithValueString(lteFieldWithString),
-		),
-		aipstr.NewOperatorFunc(
-			aipstr.GeOp,
-			aipstr.WithFieldWithValueInt(gteFieldWithInt),
-			aipstr.WithFieldWithValueString(gteFieldWithString),
-		),
-		aipstr.NewOperatorFunc(
-			aipstr.NeOp,
-			aipstr.WithFieldWithValueInt(neFieldWithInt),
-			aipstr.WithFieldWithValueString(neFieldWithString),
-		),
-		aipstr.NewOperatorFunc(
-			aipstr.HasOp,
-			aipstr.WithFieldWithValueString(hasFieldWithString),
-		),
-		aipstr.NewOperatorFunc(
-			aipstr.AndOp,
-			aipstr.WithCombineNoErr(andSelector),
-		),
-		aipstr.NewOperatorFunc(
-			aipstr.OrOp,
-			aipstr.WithCombineNoErr(orSelector),
-		),
-		aipstr.NewOperatorFunc(
-			aipstr.TrueOp,
-			aipstr.WithNoField(func() selector { return trueSelector }),
-		),
-		aipstr.NewOperatorFunc(
-			aipstr.FalseOp,
-			aipstr.WithNoField(func() selector { return falseSelector }),
-		),
-	}
+	return basicOperators
 }
 
 func getFilterDeclaration() *aipstr.Declaration[selector] {
 	return aipstr.NewDeclaration(
 		aipstr.WithColumns(
-			aipstr.NewColumn("id", aipstr.Filterable[selector]()),
 			aipstr.NewColumn("province_code", aipstr.Filterable[selector]()),
 			aipstr.NewColumn("province_name", aipstr.Filterable[selector]()),
 			aipstr.NewColumn("district_code", aipstr.Filterable[selector]()),
@@ -325,4 +315,23 @@ func getFilterDeclaration() *aipstr.Declaration[selector] {
 		),
 		aipstr.WithOperatorFuncs(getBasicOperator()...),
 	)
+}
+
+func getWhereClause[T any](filterStr string, parser *participle.Parser[aipstr.Filter], decl *aipstr.Declaration[T]) (T, error) {
+	var zero T
+	filter, err := parser.ParseString("", filterStr)
+	if err != nil {
+		return zero, err
+	}
+	return decl.WhereClause(filter)
+}
+
+func getWhereClauseFromRequest[Req interface{ GetFilter() string }](req Req, parser *participle.Parser[aipstr.Filter], decl *aipstr.Declaration[selector]) (selector, error) {
+	filter := trueSelector
+	filterStr := req.GetFilter()
+	if filterStr == "" {
+		return filter, nil
+	}
+
+	return getWhereClause(filterStr, parser, decl)
 }

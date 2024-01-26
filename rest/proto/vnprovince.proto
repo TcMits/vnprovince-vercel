@@ -23,6 +23,39 @@ service VNProvinceService {
     };
     option (google.api.method_signature) = "name";
   }
+  rpc ListProvinces(ListProvincesRequest) returns (ListProvincesResponse) {
+    option (google.api.http) = {
+      get: "/api/provinces"
+    };
+  }
+  rpc GetProvince(GetProvinceRequest) returns (Province) {
+    option (google.api.http) = {
+      get: "/api/{name=provinces/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+  rpc ListDistricts(ListDistrictsRequest) returns (ListDistrictsResponse) {
+    option (google.api.http) = {
+      get: "/api/{parent=provinces/*}/districts"
+    };
+  }
+  rpc GetDistrict(GetDistrictRequest) returns (District) {
+    option (google.api.http) = {
+      get: "/api/{name=provinces/*/districts/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
+  rpc ListWards(ListWardsRequest) returns (ListWardsResponse) {
+    option (google.api.http) = {
+      get: "/api/{parent=provinces/*/districts/*}/wards"
+    };
+  }
+  rpc GetWard(GetWardRequest) returns (Ward) {
+    option (google.api.http) = {
+      get: "/api/{name=provinces/*/districts/*/wards/*}"
+    };
+    option (google.api.method_signature) = "name";
+  }
 }
 
 message Division {
@@ -45,6 +78,60 @@ message Division {
   string province_name = 6 [(google.api.field_behavior) = REQUIRED];
   string district_name = 7 [(google.api.field_behavior) = REQUIRED];
   string ward_name = 8 [(google.api.field_behavior) = OPTIONAL];
+}
+
+message Province {
+  option (google.api.resource) = {
+    type: "vnprovince/Province"
+    pattern: "provinces/{province_id}"
+    singular: "province"
+    plural: "provinces"
+  };
+
+  // Format: provinces/{province_id}
+  string name = 1 [
+    (google.api.field_behavior) = IDENTIFIER,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {field_configuration: {path_param_name: "province_name"}}
+  ];
+  int32 id = 2 [(google.api.field_behavior) = REQUIRED];
+  int32 province_code = 3 [(google.api.field_behavior) = REQUIRED];
+  string province_name = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message District {
+  option (google.api.resource) = {
+    type: "vnprovince/District"
+    pattern: "provinces/{province_id}/districts/{district_id}"
+    singular: "district"
+    plural: "districts"
+  };
+
+  // Format: provinces/{province_id}/districts/{district_id}
+  string name = 1 [
+    (google.api.field_behavior) = IDENTIFIER,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {field_configuration: {path_param_name: "district_name"}}
+  ];
+  int32 id = 2 [(google.api.field_behavior) = REQUIRED];
+  int32 district_code = 4 [(google.api.field_behavior) = REQUIRED];
+  string district_name = 6 [(google.api.field_behavior) = REQUIRED];
+}
+
+message Ward {
+  option (google.api.resource) = {
+    type: "vnprovince/Ward"
+    pattern: "provinces/{province_id}/districts/{district_id}/wards/{ward_id}"
+    singular: "ward"
+    plural: "wards"
+  };
+
+  // Format: provinces/{province_id}/districts/{district_id}/wards/{ward_id}
+  string name = 1 [
+    (google.api.field_behavior) = IDENTIFIER,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {field_configuration: {path_param_name: "ward_name"}}
+  ];
+  int32 id = 2 [(google.api.field_behavior) = REQUIRED];
+  int32 ward_code = 4 [(google.api.field_behavior) = REQUIRED];
+  string ward_name = 6 [(google.api.field_behavior) = REQUIRED];
 }
 
 message ListDivisionsRequest {
@@ -73,5 +160,94 @@ message GetDivisionRequest {
   string name = 1 [
     (google.api.field_behavior) = REQUIRED,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {field_configuration: {path_param_name: "division_name"}}
+  ];
+}
+
+message ListProvincesRequest {
+  int32 page_size = 1 [(google.api.field_behavior) = OPTIONAL, (validate.rules).int32 = {gte: 0, lte: 500}];
+  string page_token = 2 [(google.api.field_behavior) = OPTIONAL, (validate.rules).string = {ignore_empty: true, uri_ref:  true}];
+
+  // syntax: https://google.aip.dev/160
+  // support identities:
+  // - province_code
+  // - province_name
+  string filter = 3 [(google.api.field_behavior) = OPTIONAL];
+  int32 skip = 4 [(google.api.field_behavior) = OPTIONAL, (validate.rules).int32 = {gte: 0}];
+}
+
+message ListProvincesResponse {
+  repeated Province provinces = 1;
+  string next_page_token = 2;
+}
+
+message GetProvinceRequest {
+  // Format: provinces/{province_id}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {field_configuration: {path_param_name: "province_name"}}
+  ];
+}
+
+message ListDistrictsRequest {
+  // Format: provinces/{province_id}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string.uri_ref = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {field_configuration: {path_param_name: "province_name"}},
+    (google.api.resource_reference) = {child_type: "vnprovince/District"}
+  ];
+  int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL, (validate.rules).int32 = {gte: 0, lte: 500}];
+  string page_token = 3 [(google.api.field_behavior) = OPTIONAL, (validate.rules).string = {ignore_empty: true, uri_ref:  true}];
+
+  // syntax: https://google.aip.dev/160
+  // support identities:
+  // - district_code
+  // - district_name
+  string filter = 4 [(google.api.field_behavior) = OPTIONAL];
+  int32 skip = 5 [(google.api.field_behavior) = OPTIONAL, (validate.rules).int32 = {gte: 0}];
+}
+
+message ListDistrictsResponse {
+  repeated District districts = 1;
+  string next_page_token = 2;
+}
+
+message GetDistrictRequest {
+  // Format: provinces/{province_id}/districts/{district_id}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {field_configuration: {path_param_name: "district_name"}}
+  ];
+}
+
+message ListWardsRequest {
+  // Format: provinces/{province_id}/districts/{district_id}
+  string parent = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).string.uri_ref = true,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {field_configuration: {path_param_name: "district_name"}},
+    (google.api.resource_reference) = {child_type: "vnprovince/Ward"}
+  ];
+  int32 page_size = 2 [(google.api.field_behavior) = OPTIONAL, (validate.rules).int32 = {gte: 0, lte: 500}];
+  string page_token = 3 [(google.api.field_behavior) = OPTIONAL, (validate.rules).string = {ignore_empty: true, uri_ref:  true}];
+
+  // syntax: https://google.aip.dev/160
+  // support identities:
+  // - ward_code
+  // - ward_name
+  string filter = 4 [(google.api.field_behavior) = OPTIONAL];
+  int32 skip = 5 [(google.api.field_behavior) = OPTIONAL, (validate.rules).int32 = {gte: 0}];
+}
+
+message ListWardsResponse {
+  repeated Ward wards = 1;
+  string next_page_token = 2;
+}
+
+message GetWardRequest {
+  // Format: provinces/{province_id}/districts/{district_id}/wards/{ward_id}
+  string name = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {field_configuration: {path_param_name: "ward_name"}}
   ];
 }

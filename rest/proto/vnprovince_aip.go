@@ -52,3 +52,199 @@ func (n *DivisionResourceName) UnmarshalString(name string) error {
 		&n.DivisionId,
 	)
 }
+
+type ProvinceResourceName struct {
+	ProvinceId string
+}
+
+func (n ProvinceResourceName) Validate() error {
+	if n.ProvinceId == "" {
+		return fmt.Errorf("province_id: empty")
+	}
+	if strings.IndexByte(n.ProvinceId, '/') != -1 {
+		return fmt.Errorf("province_id: contains illegal character '/'")
+	}
+	return nil
+}
+
+func (n ProvinceResourceName) ContainsWildcard() bool {
+	return false || n.ProvinceId == "-"
+}
+
+func (n ProvinceResourceName) String() string {
+	return resourcename.Sprint(
+		"provinces/{province_id}",
+		n.ProvinceId,
+	)
+}
+
+func (n ProvinceResourceName) MarshalString() (string, error) {
+	if err := n.Validate(); err != nil {
+		return "", err
+	}
+	return n.String(), nil
+}
+
+func (n *ProvinceResourceName) UnmarshalString(name string) error {
+	return resourcename.Sscan(
+		name,
+		"provinces/{province_id}",
+		&n.ProvinceId,
+	)
+}
+
+type DistrictResourceName struct {
+	ProvinceId string
+	DistrictId string
+}
+
+func (n ProvinceResourceName) DistrictResourceName(
+	districtId string,
+) DistrictResourceName {
+	return DistrictResourceName{
+		ProvinceId: n.ProvinceId,
+		DistrictId: districtId,
+	}
+}
+
+func (n DistrictResourceName) Validate() error {
+	if n.ProvinceId == "" {
+		return fmt.Errorf("province_id: empty")
+	}
+	if strings.IndexByte(n.ProvinceId, '/') != -1 {
+		return fmt.Errorf("province_id: contains illegal character '/'")
+	}
+	if n.DistrictId == "" {
+		return fmt.Errorf("district_id: empty")
+	}
+	if strings.IndexByte(n.DistrictId, '/') != -1 {
+		return fmt.Errorf("district_id: contains illegal character '/'")
+	}
+	return nil
+}
+
+func (n DistrictResourceName) ContainsWildcard() bool {
+	return false || n.ProvinceId == "-" || n.DistrictId == "-"
+}
+
+func (n DistrictResourceName) String() string {
+	return resourcename.Sprint(
+		"provinces/{province_id}/districts/{district_id}",
+		n.ProvinceId,
+		n.DistrictId,
+	)
+}
+
+func (n DistrictResourceName) MarshalString() (string, error) {
+	if err := n.Validate(); err != nil {
+		return "", err
+	}
+	return n.String(), nil
+}
+
+func (n *DistrictResourceName) UnmarshalString(name string) error {
+	return resourcename.Sscan(
+		name,
+		"provinces/{province_id}/districts/{district_id}",
+		&n.ProvinceId,
+		&n.DistrictId,
+	)
+}
+
+func (n DistrictResourceName) ProvinceResourceName() ProvinceResourceName {
+	return ProvinceResourceName{
+		ProvinceId: n.ProvinceId,
+	}
+}
+
+type WardResourceName struct {
+	ProvinceId string
+	DistrictId string
+	WardId     string
+}
+
+func (n ProvinceResourceName) WardResourceName(
+	districtId string,
+	wardId string,
+) WardResourceName {
+	return WardResourceName{
+		ProvinceId: n.ProvinceId,
+		DistrictId: districtId,
+		WardId:     wardId,
+	}
+}
+
+func (n DistrictResourceName) WardResourceName(
+	wardId string,
+) WardResourceName {
+	return WardResourceName{
+		ProvinceId: n.ProvinceId,
+		DistrictId: n.DistrictId,
+		WardId:     wardId,
+	}
+}
+
+func (n WardResourceName) Validate() error {
+	if n.ProvinceId == "" {
+		return fmt.Errorf("province_id: empty")
+	}
+	if strings.IndexByte(n.ProvinceId, '/') != -1 {
+		return fmt.Errorf("province_id: contains illegal character '/'")
+	}
+	if n.DistrictId == "" {
+		return fmt.Errorf("district_id: empty")
+	}
+	if strings.IndexByte(n.DistrictId, '/') != -1 {
+		return fmt.Errorf("district_id: contains illegal character '/'")
+	}
+	if n.WardId == "" {
+		return fmt.Errorf("ward_id: empty")
+	}
+	if strings.IndexByte(n.WardId, '/') != -1 {
+		return fmt.Errorf("ward_id: contains illegal character '/'")
+	}
+	return nil
+}
+
+func (n WardResourceName) ContainsWildcard() bool {
+	return false || n.ProvinceId == "-" || n.DistrictId == "-" || n.WardId == "-"
+}
+
+func (n WardResourceName) String() string {
+	return resourcename.Sprint(
+		"provinces/{province_id}/districts/{district_id}/wards/{ward_id}",
+		n.ProvinceId,
+		n.DistrictId,
+		n.WardId,
+	)
+}
+
+func (n WardResourceName) MarshalString() (string, error) {
+	if err := n.Validate(); err != nil {
+		return "", err
+	}
+	return n.String(), nil
+}
+
+func (n *WardResourceName) UnmarshalString(name string) error {
+	return resourcename.Sscan(
+		name,
+		"provinces/{province_id}/districts/{district_id}/wards/{ward_id}",
+		&n.ProvinceId,
+		&n.DistrictId,
+		&n.WardId,
+	)
+}
+
+func (n WardResourceName) ProvinceResourceName() ProvinceResourceName {
+	return ProvinceResourceName{
+		ProvinceId: n.ProvinceId,
+	}
+}
+
+func (n WardResourceName) DistrictResourceName() DistrictResourceName {
+	return DistrictResourceName{
+		ProvinceId: n.ProvinceId,
+		DistrictId: n.DistrictId,
+	}
+}
